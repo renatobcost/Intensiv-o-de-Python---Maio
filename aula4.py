@@ -1,30 +1,7 @@
-import pyautogui
-import pyperclip
-import time
-
-pyautogui.PAUSE = 1 
-
-# abre o navegador
-pyautogui.press("win")
-pyautogui.write("chrome")
-pyautogui.press("enter")
-
-# procura a base de dados
-pyperclip.copy("https://drive.google.com/drive/folders/1Ewh4n724sf7SKNLoU4XxQ5o7abe5p4dT?usp=sharing")
-pyautogui.hotkey("ctrl", "v")
-pyautogui.press("enter")
-time.sleep(5)
-
-# faz o download do arquivo
-pyautogui.click(x=460, y=469) # posição do arquivo
-pyautogui.click(x=1660, y=234) # posição do menu
-pyautogui.click(x=1300, y=744) # posição do botão fazer download
-time.sleep(5)
-
 # lê o arquivo
 import pandas as pd
 
-tabela = pd.read_csv(r"C:\Users\Renato\Downloads\advertising.csv") 
+tabela = pd.read_csv("base-de-dados/advertising.csv")
 
 # análise exploratória para compreender o comportamento da base de dados
 import seaborn as sns
@@ -67,9 +44,20 @@ print(metrics.r2_score(y_teste, previsao_arvoredecisao))
 #visualização gráfica das previsões
 tabela_auxiliar = pd.DataFrame()
 tabela_auxiliar["y_teste"] = y_teste
-tabela_auxiliar["Previsoes ArvoreDecisao"] = previsao_arvoredecisao
+tabela_auxiliar["Previsoes Arvore de Decisao"] = previsao_arvoredecisao
 tabela_auxiliar["Previsoes Regressao Linear"] = previsao_regressaolinear
 
 plt.figure(figsize=(15,6))
 sns.lineplot(data=tabela_auxiliar)
+plt.show()
+
+# nova previsão utilizando o melhor modelo
+# lê o arquivo
+nova_tabela = pd.read_csv("base-de-dados/novos.csv")
+
+# utiliza o modelo de arvode de decisão para fazer uma nova previsão na outra base de dados
+previsao = modelo_arvoredecisao.predict(nova_tabela)
+print(previsao)
+
+sns.barplot(x=x_treino.columns, y=modelo_arvoredecisao.feature_importances_)
 plt.show()
